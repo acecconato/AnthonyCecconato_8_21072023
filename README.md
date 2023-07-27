@@ -19,4 +19,12 @@ The projects files are inside the `/www` directory and the volume is persisted. 
 
 ## Install
 
-todo
+Download the v1.0 archive (vendors are included there, so you won't need to regenerate them).
+
+Run: 
+
+`docker-compose up -d`
+
+If necessary, you can:
+- Enter in the container with: `docker exec -it lamp-php56 bash`
+- Get the ip address of the mysql container: `docker inspect lamp-php56 | grep IPAddress` (could be necessary if you need to change the mysql host db from parameters)
