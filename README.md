@@ -21,6 +21,8 @@ The projects files are inside the `/www` directory and the volume is persisted. 
 
 Download the v1.0 archive (vendors are included there, so you won't need to regenerate them).
 
+https://github.com/acecconato/AnthonyCecconato_8_21072023/releases/download/v1.0/AnthonyCecconato_8_21072023.zip
+
 Run: 
 
 `docker-compose up -d`
