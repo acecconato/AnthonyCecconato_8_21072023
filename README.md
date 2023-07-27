@@ -25,6 +25,8 @@ Run:
 
 `docker-compose up -d`
 
+Open http://localhost 
+
 If necessary, you can:
 - Enter in the container with: `docker exec -it lamp-php56 bash`
 - Get the ip address of the mysql container: `docker inspect lamp-php56 | grep IPAddress` (could be necessary if you need to change the mysql host db from parameters)
