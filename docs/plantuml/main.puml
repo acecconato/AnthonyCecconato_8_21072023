@@ -1,0 +1,24 @@
+@startuml
+title "Use case"
+
+left to right direction
+
+actor Admin
+actor User
+actor Guest
+
+Guest -- (Login)
+
+User -- (Display to-do list)
+User -- (Display list of completed tasks)
+User -- (Add a new task)
+User -- (Mark a task as completed / not completed)
+User -- (Delete his tasks)
+User -- (Logout)
+
+Admin -- (Add a user)
+
+Admin <|- User
+User <|- Guest
+
+@enduml
