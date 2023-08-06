@@ -17,11 +17,5 @@ jobs:
           configuration: phpstan.neon
           php_version: 8.2
           
-      - name: composer check
-        run: make composer-valid
-
-      - name: twig check
-        run: make twig
-
-      - name: yaml check
-        run: make yaml
+      - name: Analyze code quality assurance
+        run: make analyze
