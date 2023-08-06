@@ -1,4 +1,4 @@
-name: CI
+name: QA
 
 on:
 - workflow_dispatch
@@ -6,7 +6,7 @@ on:
 - pull_request
 
 jobs:
-  build-test:
+  phpstan:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,3 +16,12 @@ jobs:
         with:
           configuration: phpstan.neon
           php_version: 8.2
+          
+      - name: composer check
+        run: make composer-valid
+
+      - name: twig check
+        run: make twig
+
+      - name: yaml check
+        run: make yaml
