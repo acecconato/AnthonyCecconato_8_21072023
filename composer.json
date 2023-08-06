@@ -1,4 +1,6 @@
 {
+  "name": "acecconato/todo-app-oc",
+  "description": "Todo app OC",
   "type": "project",
   "license": "proprietary",
   "minimum-stability": "stable",
