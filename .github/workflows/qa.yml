@@ -6,7 +6,7 @@ on:
 - pull_request
 
 jobs:
-  phpstan:
+  quality-assurance:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,6 +16,6 @@ jobs:
         with:
           configuration: phpstan.neon
           php_version: 8.2
-          
+
       - name: Analyze code quality assurance
         run: make analyze
