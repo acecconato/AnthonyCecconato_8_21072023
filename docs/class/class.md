@@ -19,5 +19,5 @@ classDiagram
         -Boolean completed
     }
 
-    User "1" -- "0..n" Task
-```
+    User "0..1" -- "0..n" Task
+    
