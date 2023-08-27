@@ -1,0 +1,29 @@
+@import url("~bootstrap/dist/css/bootstrap.min.css");
+
+* {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1 {
+    font-size: 2rem;
+    font-weight: normal;
+}
+
+#main-nav {
+    background: #e3f2fd;
+}
+
+#main-nav #nav-title {
+    color: #2E6CA3;
+    transition: color 100ms;
+}
+
+#main-nav a:hover #nav-title {
+    color: #23527c;
+    transition: color 260ms;
+}
+
+footer hr {
+    border-top: 1px solid #acacac;
+    margin: 20px 0;
+}

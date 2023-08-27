@@ -1,4 +1,4 @@
-.PHONY: phpstan fix composer-valid yaml twig container doctrine analyze qa
+.PHONY: phpstan fix composer-valid yaml twig container doctrine analyze qa twigcs stylelint phpunit
 
 composer-valid:
 	composer valid
@@ -14,7 +14,13 @@ phpstan:
 	php vendor/bin/phpstan analyse -c phpstan.neon
 fix:
 	php vendor/bin/php-cs-fixer fix
+twigcs:
+	php vendor/bin/twigcs templates
+stylelint:
+	npx stylelint assets/styles/*.css
+phpunit:
+	php vendor/bin/phpunit
 
-analyze: twig yaml composer-valid container doctrine phpstan
+analyze: twig yaml composer-valid container doctrine phpstan twigcs stylelint phpunit
 
 qa: fix analyze
