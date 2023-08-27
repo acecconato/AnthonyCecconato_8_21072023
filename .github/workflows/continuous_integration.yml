@@ -1,0 +1,72 @@
+name: Symfony
+
+on: [ push ]
+
+jobs:
+  ci:
+    name: 'Continuous Integration'
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: "app"
+          POSTGRES_PASSWORD: "!ChangeMe!"
+          POSTGRES_DB: "app"
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
+    strategy:
+      fail-fast: false
+      matrix:
+        php-version: [ '8.2', '8.3' ]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install javascript dependencies
+        run: npm install
+
+      - name: Set up PHP ${{ matrix.php-version }}
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+
+      - name: Copy .env.test.local
+        run: php -r "file_exists('.env.test.local') || copy('.env.test', '.env.test.local');"
+
+      - name: Cache Composer packages for speed
+        id: composer-cache
+        uses: actions/cache@v2
+        with:
+          path: vendor
+          key: ${{ runner.os }}-php-${{ matrix.php-version }}-${{ hashFiles('**/composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-php-${{ matrix.php-version }}-
+
+      - name: Install Composer Dependencies
+        run: composer install --no-dev -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
+      - name: Run Migrations
+        run: |
+          composer require --dev symfony/orm-pack
+          php bin/console --no-interaction doctrine:migrations:migrate || echo "No migrations found or migration failed"
+          php bin/console --no-interaction doctrine:database:create --env=test
+          php bin/console --no-interaction doctrine:migrations:migrate --env=test || echo "No migrations found or migration failed"
+        env:
+          DATABASE_URL: pgsql://app:!ChangeMe!@127.0.0.1:5432/app?charset=UTF-8
+
+      - name: Build
+        run: npm run build
+
+      - name: Code Quality Assurance
+        run: make analyze
+
+      - name: Execute tests via PHPUnit
+        run: vendor/bin/phpunit

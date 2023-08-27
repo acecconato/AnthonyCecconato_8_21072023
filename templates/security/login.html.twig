@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'Connexion - ' ~ parent() }}{% endblock %}
+
+{% block body %}
+
+    <section class="container">
+        <h1>Connexion</h1>
+
+        {% if error %}
+            {{ component('alert', {message: error.messageKey|trans(error.messageData, 'security'), class: 'mb-0'}) }}
+        {% endif %}
+
+        <form action="{{ path('app_login') }}" method="post" class="row g-2">
+
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+            <div class="row g-3 align-items-center">
+
+                <div class="col-12 col-lg-auto">
+                    <label for="username">Nom d'utilisateur</label>
+                </div>
+
+                <div class="col-12 col-lg-auto">
+                    <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" required>
+                </div>
+
+                <div class="col-12 col-lg-auto">
+                    <label for="password">Mot de passe</label>
+                </div>
+
+                <div class="col-12 col-lg-auto">
+                    <input class="form-control" type="password" id="password" name="_password" required>
+                </div>
+
+                <div class="col-12 col-lg-auto">
+                    <button class="btn btn-success" type="submit" name="_submit">Se connecter</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+{% endblock %}

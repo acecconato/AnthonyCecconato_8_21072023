@@ -1,16 +1,49 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        {% block stylesheets %}
-        {% endblock %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}To Do List app{% endblock %}</title>
+    <link rel="icon"
+          href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }}
+    {% endblock %}
 
-        {% block javascripts %}
-        {% endblock %}
-    </head>
-    <body>
-        {% block body %}{% endblock %}
-    </body>
+    {% block javascripts %}
+        {{ encore_entry_script_tags('app') }}
+    {% endblock %}
+</head>
+<body>
+{% block header %}
+    {% block navbar %}
+        <header class="container-fluid" id="main-nav">
+            <nav class="navbar navbar-expand-lg">
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center gap-2" href="{{ path('app_home') }}"
+                       title="Retour à l'accueil">
+                        <div class="fs-6 fw-normal mb-0" id="nav-title">To Do List App</div>
+                        <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="Logo Openclassrooms" width="60"
+                             height="43">
+                    </a>
+                </div>
+            </nav>
+        </header>
+    {% endblock %}
+
+    {% block background_image %}
+        <section class="container mt-5" aria-hidden="true">
+            <img src="{{ asset('img/todolist_homepage.jpg') }}" alt="Image de couverture" class="img-fluid w-100 mb-3">
+        </section>
+    {% endblock %}
+{% endblock %}
+
+{% block body %}{% endblock %}
+
+{% block footer %}
+    <footer class="container pb-5">
+        <hr>
+        <div class="text-end fs-6 fw-light pt-4">Copyright © OpenClassrooms</div>
+    </footer>
+{% endblock %}
+</body>
 </html>
