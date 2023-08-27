@@ -14,7 +14,7 @@ jobs:
           POSTGRES_PASSWORD: "!ChangeMe!"
           POSTGRES_DB: "app"
         ports:
-          - 5432/tcp
+          - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 3
     strategy:
       fail-fast: false
@@ -51,17 +51,16 @@ jobs:
             ${{ runner.os }}-php-${{ matrix.php-version }}-
 
       - name: Install Composer Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: composer install --no-dev -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
 
       - name: Run Migrations
         run: |
           composer require --dev symfony/orm-pack
-          php bin/console doctrine:schema:update --force || echo "No migrations found or schema update failed"
-          php bin/console doctrine:migrations:migrate || echo "No migrations found or migration failed"
-          php bin/console doctrine:schema:update --force --env=test || echo "No migrations found or schema update failed"
-          php bin/console doctrine:migrations:migrate --env=test || echo "No migrations found or migration failed"
+          php bin/console --no-interaction doctrine:migrations:migrate || echo "No migrations found or migration failed"
+          php bin/console --no-interaction doctrine:database:create --env=test
+          php bin/console --no-interaction doctrine:migrations:migrate --env=test || echo "No migrations found or migration failed"
         env:
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:${{ job.services.postgres.ports[5432] }}/postgres?charset=UTF-8
+          DATABASE_URL: pgsql://app:!ChangeMe!@127.0.0.1:5432/app?charset=UTF-8
 
       - name: Build
         run: npm run build
@@ -71,5 +70,3 @@ jobs:
 
       - name: Execute tests via PHPUnit
         run: vendor/bin/phpunit
-        env:
-          DATABASE_URL: postgres://postgres:postgres@127.0.0.1:${{ job.services.postgres.ports[5432] }}/postgres?charset=UTF-8
