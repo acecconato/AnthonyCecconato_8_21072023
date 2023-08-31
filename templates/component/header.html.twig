@@ -1,0 +1,18 @@
+{% block navbar %}
+    {% component navbar with {id: "main-nav"} %}
+        {% block brand %}
+            <span id="nav-title">To Do List App</span>
+            <img src="{{ asset('img/Logo_OpenClassrooms.png') }}" alt="Logo Openclassrooms" width="60" height="43">
+        {% endblock %}
+
+        {% block nav %}
+            {% if (is_granted('ROLE_ADMIN')) %}
+                {{ component('nav-item', {'label': 'Gestion des comptes', 'route': 'app_users'}) }}
+            {% endif %}
+
+            {% if (is_granted('ROLE_USER')) %}
+                {{ component('nav-item', {'label': 'Déconnexion', 'route': 'app_logout'}) }}
+            {% endif %}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}

@@ -2,7 +2,7 @@
 
 namespace App\Tests\Application\Security\Authentication;
 
-use App\Doctrine\DataFixtures\AppFixtures;
+use App\Doctrine\DataFixtures\UserFixtures;
 use App\Entity\User;
 use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
 use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
@@ -33,7 +33,7 @@ class LoginTest extends WebTestCase
 
     public function testLoginSuccess(): void
     {
-        $this->databaseTool->loadFixtures([AppFixtures::class]);
+        $this->databaseTool->loadFixtures([UserFixtures::class]);
 
         $crawler = $this->client->request('GET', '/');
 
