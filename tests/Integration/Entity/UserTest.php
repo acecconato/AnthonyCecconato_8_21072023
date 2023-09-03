@@ -6,6 +6,8 @@ namespace App\Tests\Integration\Entity;
 
 use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 class UserTest extends KernelTestCase
 {
@@ -15,12 +17,12 @@ class UserTest extends KernelTestCase
     public function testValidEntity(): void
     {
         $user = new User();
-        $user->setUsername('user')->setEmail('demo@demo.fr');
+        $user->setUsername('user')->setEmail('user@test.fr');
 
         self::bootKernel();
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(0, $errors);
+        self::assertCount(0, $errors, $this->printErrors($errors));
     }
 
     /**
@@ -34,7 +36,7 @@ class UserTest extends KernelTestCase
         self::bootKernel();
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors);
+        self::assertCount(1, $errors, $this->printErrors($errors));
     }
 
     /**
@@ -43,12 +45,12 @@ class UserTest extends KernelTestCase
     public function testInvalidUsernameRegex(): void
     {
         $user = new User();
-        $user->setUsername('not_valid_regex')->setEmail('demo@demo.fr');
+        $user->setUsername('not_valid_regex')->setEmail('user@test.fr');
 
         self::bootKernel();
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors);
+        self::assertCount(1, $errors, $this->printErrors($errors));
     }
 
     /**
@@ -57,16 +59,28 @@ class UserTest extends KernelTestCase
     public function testInvalidUsernameLength(): void
     {
         $user = new User();
-        $user->setUsername('lo')->setEmail('demo@demo.fr');
+        $user->setUsername('lo')->setEmail('user@test.fr');
 
         self::bootKernel();
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors);
+        self::assertCount(1, $errors, $this->printErrors($errors));
 
         $user->setUsername('toolongusernamemustfailaaaabbbbccccdddd');
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors);
+        self::assertCount(1, $errors, $this->printErrors($errors));
+    }
+
+    private function printErrors(ConstraintViolationListInterface $errors): string
+    {
+        $messages = [];
+
+        /** @var ConstraintViolation $error */
+        foreach ($errors as $error) {
+            $messages[] = $error->getPropertyPath().' => '.$error->getMessage();
+        }
+
+        return implode(', ', $messages);
     }
 }

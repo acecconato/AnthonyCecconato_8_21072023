@@ -2,17 +2,12 @@
 
 namespace App\Tests\Application\Security\Authentication;
 
-use App\Doctrine\DataFixtures\AppFixtures;
 use App\Entity\User;
-use Liip\TestFixturesBundle\Services\DatabaseToolCollection;
-use Liip\TestFixturesBundle\Services\DatabaseTools\AbstractDatabaseTool;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 class LoginTest extends WebTestCase
 {
-    protected AbstractDatabaseTool $databaseTool;
-
     protected KernelBrowser $client;
 
     /**
@@ -22,19 +17,10 @@ class LoginTest extends WebTestCase
     {
         parent::setUp();
         $this->client = self::createClient();
-        $this->databaseTool = self::getContainer()->get(DatabaseToolCollection::class)->get();
-    }
-
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-        unset($this->databaseTool);
     }
 
     public function testLoginSuccess(): void
     {
-        $this->databaseTool->loadFixtures([AppFixtures::class]);
-
         $crawler = $this->client->request('GET', '/');
 
         $buttonCrawlerNode = $crawler->selectButton('_submit');

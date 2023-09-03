@@ -2,7 +2,10 @@
     "devDependencies": {
         "@babel/core": "^7.17.0",
         "@babel/preset-env": "^7.16.0",
+        "@hotwired/stimulus": "^3.0.0",
         "@popperjs/core": "^2.11.8",
+        "@symfony/stimulus-bridge": "^3.2.0",
+        "@symfony/ux-toggle-password": "file:vendor/symfony/ux-toggle-password/assets",
         "@symfony/webpack-encore": "^4.0.0",
         "bootstrap": "^5.3.1",
         "core-js": "^3.23.0",
@@ -20,5 +23,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "bootstrap-icons": "^1.10.5"
     }
 }

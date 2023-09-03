@@ -1,4 +1,5 @@
 @import url("~bootstrap/dist/css/bootstrap.min.css");
+@import url("~bootstrap-icons/font/bootstrap-icons.min.css");
 
 * {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -21,6 +22,11 @@ h1 {
 #main-nav a:hover #nav-title {
     color: #23527c;
     transition: color 260ms;
+}
+
+.crop-header-image {
+    max-height: 180px;
+    object-fit: cover;
 }
 
 footer hr {
