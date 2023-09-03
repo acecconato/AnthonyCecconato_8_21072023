@@ -63,7 +63,7 @@ jobs:
       - name: Apply fixtures
         run: |
           php bin/console --no-interaction d:f:l
-          php bin/console --no-interaction d:f:l--env=test
+          php bin/console --no-interaction d:f:l --env=test
 
       - name: Build
         run: npm run build
