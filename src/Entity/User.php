@@ -13,7 +13,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
-#[UniqueEntity(['email', 'username'])]
+#[UniqueEntity(fields: 'username')]
+#[UniqueEntity(fields: 'email')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -66,6 +67,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getRole(): ?string
+    {
+        return $this->role;
+    }
+
     /**
      * A visual identifier that represents this user.
      *
@@ -84,7 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return (null === $this->role) ? ['ROLE_USER'] : [$this->role];
     }
 
-    public function setRole(string $role): User
+    public function setRole(?string $role): User
     {
         $this->role = $role;
 

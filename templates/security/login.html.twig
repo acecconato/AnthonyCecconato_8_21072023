@@ -2,13 +2,17 @@
 
 {% block title %}{{ 'Connexion - ' ~ parent() }}{% endblock %}
 
+{% block header_image %}
+    {{ component('header-image', {crop: false}) }}
+{% endblock %}
+
 {% block body %}
 
     <section class="container">
         <h1>Connexion</h1>
 
         {% if error %}
-            {{ component('alert', {message: error.messageKey|trans(error.messageData, 'security'), class: 'mb-0'}) }}
+            {{ component('alert', {message: error.messageKey|trans(error.messageData, 'security')}) }}
         {% endif %}
 
         <form action="{{ path('app_login') }}" method="post" class="row g-2">
@@ -22,7 +26,8 @@
                 </div>
 
                 <div class="col-12 col-lg-auto">
-                    <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}" required>
+                    <input class="form-control" type="text" id="username" name="_username" value="{{ last_username }}"
+                           required>
                 </div>
 
                 <div class="col-12 col-lg-auto">

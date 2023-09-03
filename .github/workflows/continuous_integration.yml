@@ -59,8 +59,11 @@ jobs:
           php bin/console --no-interaction doctrine:migrations:migrate || echo "No migrations found or migration failed"
           php bin/console --no-interaction doctrine:database:create --env=test
           php bin/console --no-interaction doctrine:migrations:migrate --env=test || echo "No migrations found or migration failed"
-        env:
-          DATABASE_URL: pgsql://app:!ChangeMe!@127.0.0.1:5432/app?charset=UTF-8
+
+      - name: Apply fixtures
+        run: |
+          php bin/console --no-interaction d:f:l
+          php bin/console --no-interaction d:f:l --env=test
 
       - name: Build
         run: npm run build
