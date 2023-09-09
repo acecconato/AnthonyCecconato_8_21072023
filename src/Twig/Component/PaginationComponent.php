@@ -11,7 +11,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 #[AsTwigComponent(name: 'pagination', template: 'component/pagination.html.twig')]
 final class PaginationComponent
 {
-    public int $nearbyPagesLimit = 4;
+    public int $nearby_pages_limit = 4;
 
     public int $total_items;
 
@@ -20,6 +20,9 @@ final class PaginationComponent
     public int $page;
 
     public string $route;
+
+    /** @var array<string> */
+    public array $params = [];
 
     /**
      * @param array<mixed> $data
@@ -30,7 +33,8 @@ final class PaginationComponent
     public function preMount(array $data): array
     {
         $resolver = new OptionsResolver();
-        $resolver->setRequired(['total_items', 'total_pages', 'page', 'route']);
+        $resolver->setRequired(['total_items', 'total_pages', 'page', 'route', 'params']);
+        $resolver->setDefault('params', []);
 
         return $resolver->resolve($data);
     }

@@ -24,7 +24,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    public function __construct(ManagerRegistry $registry, private readonly Security $security, private readonly int $users_per_page)
+    public function __construct(ManagerRegistry $registry, private readonly Security $security, private readonly int $usersPerPage)
     {
         parent::__construct($registry, User::class);
     }
@@ -52,7 +52,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         /** @var User $user */
         $user = $this->security->getUser();
 
-        $perPage = $this->users_per_page;
+        $perPage = $this->usersPerPage;
 
         /** @var User[] $users */
         $users = $this

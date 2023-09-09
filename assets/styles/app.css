@@ -33,3 +33,17 @@ footer hr {
     border-top: 1px solid #acacac;
     margin: 20px 0;
 }
+
+.container {
+    max-width: 1170px;
+}
+
+.card-title {
+    color: #337ab7;
+}
+
+.card-title > i {
+    position: relative;
+    margin-top: -100px;
+    margin-right: 200px;
+}

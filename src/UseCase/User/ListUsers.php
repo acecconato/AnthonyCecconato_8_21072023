@@ -13,7 +13,7 @@ final class ListUsers implements ListUsersInterface
 {
     private int $page;
 
-    public function __construct(RequestStack $request, private readonly UserRepository $repository, private readonly int $users_per_page)
+    public function __construct(RequestStack $request, private readonly UserRepository $repository, private readonly int $usersPerPage)
     {
         $request = $request->getCurrentRequest();
 
@@ -34,8 +34,8 @@ final class ListUsers implements ListUsersInterface
 
         return [
             'total_items' => $total_items,
-            'total_pages' => (int) ceil($total_items / $this->users_per_page),
-            'items_per_page' => $this->users_per_page,
+            'total_pages' => (int) ceil($total_items / $this->usersPerPage),
+            'items_per_page' => $this->usersPerPage,
             'page' => $this->page,
         ];
     }

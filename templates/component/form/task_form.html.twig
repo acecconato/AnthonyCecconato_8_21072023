@@ -1,0 +1,19 @@
+<div {{ attributes }}>
+    {{ form_start(form, {attr: {class: 'row g-3 mt-4'}}) }}
+
+    <div class="col-12">
+        {{ form_widget(form.title, {attr: {class: 'form-control', placeholder: 'Nom de la tâche'}}) }}
+        {{ form_errors(form.title, {attr: {class: 'invalid-feedback'}}) }}
+    </div>
+
+    <div class="col-12">
+        {{ form_widget(form.content, {attr: {rows: 8, class: 'form-control', placeholder: 'Contenu'}}) }}
+        {{ form_errors(form.content, {attr: {class: 'invalid-feedback'}}) }}
+    </div>
+
+    <div class="col-12 col-md mt-5">
+        <input class="btn btn-success w-100" type="submit" name="submit" value="Enregistrer">
+    </div>
+
+    {{ form_end(form) }}
+</div>

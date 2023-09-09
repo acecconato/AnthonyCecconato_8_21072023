@@ -24,3 +24,10 @@ phpunit-coverage:
 analyze: twig yaml composer-valid container doctrine phpstan stylelint phpunit
 
 qa: fix analyze
+
+fixtures:
+	php bin/console doctrine:fixtures:load -n
+	php bin/console doctrine:fixtures:load --env=test -n
+	php bin/console doctrine:fixtures:load --env=dev -n
+.PHONY: fixtures
+

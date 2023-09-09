@@ -19,9 +19,7 @@ class UserController extends AbstractController
     #[Route('/comptes', name: 'app_users')]
     public function index(ListUsersInterface $listUsers): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         /** @var User $user */
         $user = $this->getUser();
@@ -35,9 +33,7 @@ class UserController extends AbstractController
     #[Route('/comptes/ajouter', name: 'app_users_add')]
     public function create(Request $request, CreateUserInterface $createUser): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $user = new User();
         $form = $this->createForm(UserType::class, $user, ['validation_groups' => ['Default', 'user:create']]);
@@ -61,9 +57,7 @@ class UserController extends AbstractController
     #[Route('/comptes/{id}/modifier', name: 'app_users_update')]
     public function update(User $user, Request $request, UpdateUserInterface $updateUser): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
@@ -85,9 +79,7 @@ class UserController extends AbstractController
     #[Route(path: '/comptes/{id}/modifier-role', name: 'app_users_update_role')]
     public function updateUserRole(User $user, UpdateUserRoleInterface $updateUserRole, Request $request): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $updateUserRole($user);
         $this->addFlash('success', 'Le rôle a bien été mis à jour');
@@ -98,9 +90,7 @@ class UserController extends AbstractController
     #[Route(path: '/comptes/{id}/supprimer', name: 'app_users_delete')]
     public function deleteUser(User $user, DeleteUserInterface $deleteUser, Request $request): Response
     {
-        if (!$this->isGranted('ROLE_ADMIN')) {
-            throw $this->createAccessDeniedException();
-        }
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         $deleteUser($user);
         $this->addFlash('success', "L'utilisateur a bien été supprimé");

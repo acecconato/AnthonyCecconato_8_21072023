@@ -1,28 +1,27 @@
 {% if total_pages > 1 %}
-    {% set nearbyPagesLimit = 4 %}
     <nav {{ attributes.defaults({'aria-label': 'Pagination'})}}>
         <ul class="pagination justify-content-end">
 
             {% if page - 1 > 0 %}
-                <li class="page-item"><a class="page-link" href="{{ path(route, {page: page - 1}) }}">Précédent</a></li>
+                <li class="page-item"><a class="page-link" href="{{ path(route, {page: page - 1, ...params }) }}">Précédent</a></li>
             {% endif %}
 
             {% for i in 1..total_pages %}
-                {% if 0 == (page - nearbyPagesLimit) - loop.index %}
+                {% if 0 == (page - nearby_pages_limit) - loop.index %}
                     <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                {% elseif 0 == (page + nearbyPagesLimit) - loop.index %}
+                {% elseif 0 == (page + nearby_pages_limit) - loop.index %}
                     <li class="page-item disabled"><a class="page-link" href="#">...</a></li>
-                {% elseif 0 < (page - nearbyPagesLimit) - loop.index %}
-                {% elseif 0 > (page + nearbyPagesLimit) - loop.index %}
+                {% elseif 0 < (page - nearby_pages_limit) - loop.index %}
+                {% elseif 0 > (page + nearby_pages_limit) - loop.index %}
                 {% else %}
                     <li {% if page == loop.index  %} class="page-item active"{% endif %}>
-                        <a class="page-link" href="{{ path(route, { page: loop.index }) }}">{{ loop.index }}</a>
+                        <a class="page-link" href="{{ path(route, { page: loop.index, ...params }) }}">{{ loop.index }}</a>
                     </li>
                 {% endif %}
             {% endfor %}
 
             {% if page + 1 <= total_pages %}
-                <li class="page-item"><a class="page-link" href="{{ path(route, {page: page + 1}) }}">Suivant</a></li>
+                <li class="page-item"><a class="page-link" href="{{ path(route, {page: page + 1, ...params }) }}">Suivant</a></li>
             {% endif %}
         </ul>
     </nav>

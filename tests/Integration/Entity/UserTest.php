@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Tests\Integration\Entity;
 
+use App\Entity\Task;
 use App\Entity\User;
-use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 
-class UserTest extends KernelTestCase
+final class UserTest extends AbstractEntityTest
 {
     /**
      * @throws \Exception
@@ -36,7 +37,7 @@ class UserTest extends KernelTestCase
         self::bootKernel();
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors, $this->printErrors($errors));
+        self::assertTrue($this->hasConstraint(Email::class, 'email', $errors), $this->printErrors($errors));
     }
 
     /**
@@ -50,7 +51,7 @@ class UserTest extends KernelTestCase
         self::bootKernel();
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors, $this->printErrors($errors));
+        self::assertTrue($this->hasConstraint(Regex::class, 'username', $errors), $this->printErrors($errors));
     }
 
     /**
@@ -69,18 +70,79 @@ class UserTest extends KernelTestCase
         $user->setUsername('toolongusernamemustfailaaaabbbbccccdddd');
         $errors = self::getContainer()->get('validator')->validate($user);
 
-        self::assertCount(1, $errors, $this->printErrors($errors));
+        self::assertTrue($this->hasConstraint(Length::class, 'username', $errors), $this->printErrors($errors));
     }
 
-    private function printErrors(ConstraintViolationListInterface $errors): string
+    /**
+     * @throws \Exception
+     */
+    public function testOnDeleteCascadeTasks(): void
     {
-        $messages = [];
+        self::bootKernel();
+        $manager = self::getContainer()->get('doctrine.orm.entity_manager');
 
-        /** @var ConstraintViolation $error */
-        foreach ($errors as $error) {
-            $messages[] = $error->getPropertyPath().' => '.$error->getMessage();
-        }
+        /** @var User $user */
+        $user = $manager->getRepository(User::class)->findOneBy(['username' => 'demo']);
+        $ownerId = $user->getId();
 
-        return implode(', ', $messages);
+        self::assertCount(20, $user->getTasks());
+
+        $manager->remove($user);
+        $manager->flush();
+
+        self::assertNull($manager->getRepository(User::class)->findOneBy(['username' => 'demo']));
+
+        self::assertCount(0, $manager->getRepository(Task::class)->findBy(['owner' => $ownerId]));
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testUserAddTask(): void
+    {
+        self::bootKernel();
+        $manager = self::getContainer()->get('doctrine.orm.entity_manager');
+
+        $task = new Task();
+        $task->setTitle('title')->setContent('title');
+
+        /** @var User $user */
+        $user = $manager->getRepository(User::class)->findOneBy(['username' => 'demo']);
+        $user->addTask($task);
+
+        $manager->persist($user);
+        $manager->persist($task);
+        $manager->flush();
+
+        self::assertNotNull($task->getId());
+        self::assertEquals($user, $task->getOwner());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testUserRemoveTask(): void
+    {
+        self::bootKernel();
+        $manager = self::getContainer()->get('doctrine.orm.entity_manager');
+
+        /** @var User $user */
+        $user = $manager->getRepository(User::class)->findOneBy(['username' => 'demo']);
+
+        /** @var Task[] $tasks */
+        $tasks = $user->getTasks();
+
+        self::assertCount(20, $tasks);
+
+        $taskToRemove = $tasks[0];
+
+        $user->removeTask($taskToRemove);
+
+        $manager->persist($user);
+        $manager->flush();
+
+        self::assertCount(19, $user->getTasks());
+        self::assertNotNull($user->getId());
+        self::assertNull($taskToRemove->getOwner());
     }
 }
