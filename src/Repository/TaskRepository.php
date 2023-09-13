@@ -8,7 +8,6 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bridge\Doctrine\Types\UlidType;
-use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * @extends ServiceEntityRepository<Task>
@@ -22,7 +21,6 @@ class TaskRepository extends ServiceEntityRepository
 {
     public function __construct(
         ManagerRegistry $registry,
-        private readonly Security $security,
         private readonly int $tasksPerPage
     ) {
         parent::__construct($registry, Task::class);
@@ -39,11 +37,8 @@ class TaskRepository extends ServiceEntityRepository
      *
      * @throws NonUniqueResultException
      */
-    public function getPaginatedTasks(int $page, bool $completed = false, bool $anon = false): array
+    public function getPaginatedTasks(User $user, int $page, bool $completed = false, bool $anon = false): array
     {
-        /** @var User $user */
-        $user = $this->security->getUser();
-
         $query = $this
             ->createQueryBuilder('task')
             ->orderBy('task.id', 'DESC')
@@ -54,12 +49,10 @@ class TaskRepository extends ServiceEntityRepository
             ->createQueryBuilder('task')
             ->select('COUNT(task.id)');
 
-        if (true === $anon) {
+        if ($anon) {
             $query->where('task.owner IS NULL');
             $totalItemsQuery->where('task.owner IS NULL');
-        }
-
-        if (false === $anon) {
+        } else {
             $query
                 ->where('task.completed = :completed')
                 ->setParameter('completed', $completed)

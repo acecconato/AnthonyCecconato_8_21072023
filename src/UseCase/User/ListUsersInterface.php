@@ -9,17 +9,13 @@ use App\Entity\User;
 interface ListUsersInterface
 {
     /**
-     * @return User[]
-     */
-    public function __invoke(User $user): array;
-
-    /**
      * @return array{
      *     total_items: int,
      *     total_pages: int,
      *     items_per_page: int,
-     *     page: int
+     *     page: int,
+     *     embedded: User[]
      * }
      */
-    public function getPaginationDatas(): array;
+    public function __invoke(User $user, int $page): array;
 }

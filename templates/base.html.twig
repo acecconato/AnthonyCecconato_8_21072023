@@ -16,12 +16,20 @@
 <body>
 
 {% block header %}
-   {{ component('header') }}
+    {{ component('header') }}
 
     {% block header_image %}
         {{ component('header-image', {crop: true}) }}
     {% endblock %}
 {% endblock %}
+
+{% for type, messages in app.flashes %}
+    <div class="container">
+        {% for message in messages %}
+            <p class="alert alert-{{ type }}">{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endfor %}
 
 {% block body %}{% endblock %}
 

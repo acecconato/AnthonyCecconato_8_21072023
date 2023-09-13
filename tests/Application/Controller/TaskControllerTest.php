@@ -143,31 +143,26 @@ class TaskControllerTest extends WebTestCase
         self::assertSelectorTextContains('h1', 'Connexion');
     }
 
-//    /**
-//     * @throws \Exception
-//     */
-//    public function testMarkTaskAccessDeniedException(): void
-//    {
-//        $this->login();
-//
-//        /** @var Task $task */
-//        $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findAll()[0];
-//
-//        $this->client->catchExceptions(false);
-//        self::expectException(AccessDeniedException::class);
-//
-//        $this->client->request('GET', 'app/taches/'.$task->getId().'/marquer');
-//    }
+    /**
+     * @throws \Exception
+     */
+    public function testMarkTaskAccessDeniedException(): void
+    {
+        /** @var Task $task */
+        $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findAll()[0];
+
+        $this->client->catchExceptions(false);
+        self::expectException(AccessDeniedException::class);
+
+        $this->client->request('GET', 'app/taches/'.$task->getId().'/marquer');
+    }
 
     /**
      * @throws \Exception
      */
     public function testMarkTaskNotOwnerAccessDeniedException(): void
     {
-        self::bootKernel();
-
-        /** @var User $user */
-        $user = $this->manager->getRepository(User::class)->findOneBy(['username' => 'demo']);
+        $this->login();
 
         /** @var User $user2 */
         $user2 = $this->manager->getRepository(User::class)->findOneBy(['username' => 'user1']);
@@ -198,7 +193,9 @@ class TaskControllerTest extends WebTestCase
         self::assertResponseIsSuccessful();
 
         /** @var Task $task */
-        $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findOneBy(['id' => $task->getId()]);
+        $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findOneBy(
+            ['id' => $task->getId()]
+        );
 
         self::assertEquals(false, $task->isCompleted());
     }
@@ -222,13 +219,28 @@ class TaskControllerTest extends WebTestCase
         self::assertNull($task->getId());
     }
 
+    public function testAnonTaskSuccess(): void
+    {
+        /** @var User $user */
+        $user = $this->manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
+        $this->client->loginUser($user);
+
+        /** @var Task $task */
+        $task = $this->manager->getRepository(Task::class)->findOneBy(['owner' => null]);
+
+        $this->client->request('GET', 'app/taches/'.$task->getId().'/supprimer');
+
+        $this->client->followRedirect();
+
+        self::assertResponseIsSuccessful();
+        self::assertNull($task->getId());
+    }
+
     /**
      * @throws \Exception
      */
     public function testDeleteTaskAccessDeniedException(): void
     {
-        self::bootKernel();
-
         /** @var Task $task */
         $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findAll()[0];
 

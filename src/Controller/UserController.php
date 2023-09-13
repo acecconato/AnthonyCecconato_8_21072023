@@ -17,16 +17,17 @@ use Symfony\Component\Routing\Annotation\Route;
 class UserController extends AbstractController
 {
     #[Route('/comptes', name: 'app_users')]
-    public function index(ListUsersInterface $listUsers): Response
+    public function index(ListUsersInterface $listUsers, Request $request): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ADMIN');
 
         /** @var User $user */
         $user = $this->getUser();
 
+        $page = max($request->query->getInt('page', 1), 1);
+
         return $this->render('user/index.html.twig', [
-            'users' => $listUsers($user),
-            'pagination' => $listUsers->getPaginationDatas(),
+            'users' => $listUsers($user, $page),
         ]);
     }
 

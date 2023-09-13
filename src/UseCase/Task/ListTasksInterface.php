@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\UseCase\Task;
 
+use App\DTO\ListTasksDTO;
 use App\Entity\Task;
+use App\Entity\User;
 
 interface ListTasksInterface
 {
@@ -17,5 +19,5 @@ interface ListTasksInterface
      *     embedded: Task[]
      * }
      */
-    public function __invoke(): array;
+    public function __invoke(User $user, ListTasksDTO $listTasksDTO): array;
 }

@@ -19,7 +19,7 @@
             </thead>
 
             <tbody>
-            {% for user in users %}
+            {% for user in users.embedded %}
                 <tr>
                     <td>{{ user.username|capitalize }}</td>
                     <td>{{ user.email }}</td>
@@ -51,9 +51,9 @@
         </table>
 
         {{ component('pagination', {
-            total_items: pagination.total_items,
-            total_pages: pagination.total_pages,
-            page: pagination.page,
+            total_items: users.total_items,
+            total_pages: users.total_pages,
+            page: users.page,
             route: 'app_users'
         }) }}
 

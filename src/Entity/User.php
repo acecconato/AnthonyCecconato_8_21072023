@@ -41,7 +41,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     /** @var Collection<array-key, Task> */
-    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Task::class, cascade: ['remove'])]
+    #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Task::class)]
     private Collection $tasks;
 
     public function __construct()

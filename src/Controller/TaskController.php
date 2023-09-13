@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\DTO\ListTasksDTO;
 use App\Entity\Task;
 use App\Entity\User;
 use App\Form\TaskType;
-use App\UseCase\Task\CreateTask;
+use App\UseCase\Task\CreateTaskInterface;
 use App\UseCase\Task\DeleteTaskInterface;
 use App\UseCase\Task\ListTasksInterface;
 use App\UseCase\Task\MarkTaskInterface;
@@ -15,6 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class TaskController extends AbstractController
 {
@@ -23,13 +25,22 @@ class TaskController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $listTasksDTO = new ListTasksDTO(
+            $request->query->getInt('page', 1),
+            $request->query->getBoolean('completed'),
+            $request->query->getBoolean('anon')
+        );
+
         return $this->render('task/index.html.twig', [
-            'tasks' => $listTasks(),
+            'tasks' => $listTasks($user, $listTasksDTO),
         ]);
     }
 
     #[Route(path: '/app/taches/creer', name: 'app_task_create')]
-    public function create(Request $request, CreateTask $createTask): Response
+    public function create(Request $request, CreateTaskInterface $createTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
 
@@ -38,10 +49,7 @@ class TaskController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var User $user */
-            $user = $this->getUser();
-
-            $createTask($task, $user);
+            $createTask($task);
 
             $this->addFlash('success', 'Tâche créée avec succès');
 
@@ -52,13 +60,10 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/app/taches/{id}/marquer', name: 'app_task_mark')]
-    public function mark(Task $task, MarkTaskInterface $markTask, Request $request): Response
+    #[IsGranted(attribute: 'owner', subject: 'task')]
+    public function mark(Task $task, MarkTaskInterface $markTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
-        if ($task->getOwner() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
 
         $markTask($task);
 
@@ -66,13 +71,10 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/app/taches/{id}/supprimer', name: 'app_task_delete')]
+    #[IsGranted(attribute: 'owner', subject: 'task')]
     public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
-
-        if ($task->getOwner() !== $this->getUser()) {
-            throw $this->createAccessDeniedException();
-        }
 
         $deleteTask($task);
 

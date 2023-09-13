@@ -10,6 +10,9 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 
 abstract class AbstractEntityTest extends KernelTestCase
 {
+    /**
+     * @param class-string $constraint
+     */
     protected function hasConstraint(string $constraint, string $propertyPath, ConstraintViolationListInterface $errors): bool
     {
         /** @var ConstraintViolation $error */
