@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {{ form_start(form, {attr: {class: 'row g-3 mt-4 col-6'}}) }}
+    {{ form_start(form, {attr: {class: 'row g-3 mt-4'}}) }}
 
     <div class="col-12">
         {{ form_widget(form.email, {attr: {class: 'form-control', placeholder: 'E-mail'}}) }}
@@ -21,8 +21,8 @@
         {{ form_errors(form.role, {attr: {class: 'invalid-feedback'}}) }}
     </div>
 
-    <div class="col-12 col-md mt-5">
-        <input class="btn btn-success w-100" type="submit" name="submit" value="Enregistrer">
+    <div class="col- col-md mt-5">
+        <input class="btn btn-success" type="submit" name="submit" value="Enregistrer">
     </div>
 
     {{ form_end(form) }}

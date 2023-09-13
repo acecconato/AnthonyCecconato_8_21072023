@@ -38,7 +38,7 @@ class UserControllerTest extends WebTestCase
         $crawler = $this->client->request('GET', '/comptes');
         self::assertResponseIsSuccessful();
 
-        self::assertCount(10, $crawler->filter('table > tbody > tr'));
+        self::assertCount(9, $crawler->filter('table > tbody > tr'));
     }
 
     public function testIndexUnauthorized(): void

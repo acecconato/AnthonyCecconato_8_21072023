@@ -1,7 +1,48 @@
 {% extends 'base.html.twig' %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js"
+            integrity="sha384-GNFwBvfVxBkLMJpYMOABq3c+d3KnQxudP/mGPkzpZSTYykLBNsZEnG2D9G/X/+7D" crossorigin="anonymous"
+            async></script>
+{% endblock %}
+
 {% block body %}
-    <section class="container">
-        <h1>Dashboard</h1>
-    </section>
+    <main class="container">
+        <h1>Bienvenue sur Todo List, l'application vous permettant de gérer l'ensemble de vos tâches sans effort !</h1>
+        <div class="mt-3">
+            <a href="{{ path('app_task_create') }}" id="task-add" class="btn btn-primary">Créer une nouvelle tâche</a>
+            {% if app.request.get('completed') == false %}
+                <a href="{{ path('app_home', {completed: true}) }}" id="completed-tasks"
+                   class="btn btn-outline-success">Consulter la liste des tâches terminées</a>
+            {% else %}
+                <a href="{{ path('app_home', {completed: false}) }}" id="completed-tasks"
+                   class="btn btn-outline-warning">Consulter la liste des tâches à faire</a>
+            {% endif %}
+            <a href="{{ path('app_home', {anon: true}) }}" id="anon-tasks" class="btn btn-link">Voir les tâches anonymes</a>
+        </div>
+
+        <section class="mt-5">
+            <h2>Liste des tâches</h2>
+
+            <div class="row task-list mt-4" data-masonry='{"percentPosition": true }'>
+                {% for task in tasks.embedded %}
+                    {{ component('task-item', {task: task}) }}
+                {% else %}
+                    <div class="alert alert-info">Vous n'avez pas encore de tâches</div>
+                {% endfor %}
+            </div>
+
+            {{ component('pagination', {
+                total_items: tasks.total_items,
+                total_pages: tasks.total_pages,
+                page: tasks.page,
+                route: 'app_home',
+                params: {
+                    completed: app.request.get('completed'),
+                    anon: app.request.get('anon')
+                }
+            }) }}
+        </section>
+    </main>
 {% endblock %}

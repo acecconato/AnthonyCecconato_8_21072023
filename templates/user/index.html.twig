@@ -6,7 +6,7 @@
     <section class="container">
         <h1>Gestion des comptes</h1>
 
-        <a class="btn btn-primary" href="{{ path('app_users_add') }}"><i class="bi bi-plus-square fs-5"></i> Ajouter un utilisateur</a>
+        <a class="btn btn-primary" href="{{ path('app_users_add') }}">Créer un compte</a>
 
         <table class="table table-bordered table-responsive mt-4">
             <thead class="table-dark">
@@ -19,29 +19,29 @@
             </thead>
 
             <tbody>
-            {% for user in users %}
+            {% for user in users.embedded %}
                 <tr>
                     <td>{{ user.username|capitalize }}</td>
                     <td>{{ user.email }}</td>
                     <td>
                         {% if 'ROLE_ADMIN' in user.roles %}
-                            <a title="Enlever le role administrateur" class="btn btn-outline-dark"
+                            <a title="Enlever le role administrateur" class="btn btn-sm btn-outline-dark"
                                href="{{ path('app_users_update_role', {id: user.id}) }}">
                                 {{ (user.role == 'ROLE_ADMIN') ? 'Administrateur' : 'Utilisateur' }}
                             </a>
                         {% else %}
-                            <a title="Ajouter le role administrateur" class="btn btn-outline-dark"
+                            <a title="Ajouter le role administrateur" class="btn btn-sm btn-outline-dark"
                                href="{{ path('app_users_update_role', {id: user.id}) }}">
                                 {{ (user.role == 'ROLE_ADMIN') ? 'Administrateur' : 'Utilisateur' }}
                             </a>
                         {% endif %}
                     </td>
                     <td {{ stimulus_controller('validation') }} data-validation-message-value="Souhaitez-vous vraiment supprimer le compte ?">
-                        <a href="{{ path('app_users_update', {id: user.id}) }}" class="btn btn-outline-primary">
+                        <a href="{{ path('app_users_update', {id: user.id}) }}" class="btn btn-sm btn-outline-primary">
                             <i aria-hidden="true" class="bi bi-pencil-fill fs-5"></i> Modifier
                         </a>
 
-                        <a href="{{ path('app_users_delete', {id: user.id}) }}" class="btn btn-outline-danger" {{ stimulus_action('validation', 'onClick') }}>
+                        <a href="{{ path('app_users_delete', {id: user.id}) }}" class="btn btn-sm btn-outline-danger" {{ stimulus_action('validation', 'onClick') }}>
                             <i aria-hidden="true" class="bi bi-trash2-fill fs-5"></i> Supprimer
                         </a>
                     </td>
@@ -51,9 +51,9 @@
         </table>
 
         {{ component('pagination', {
-            total_items: pagination.total_items,
-            total_pages: pagination.total_pages,
-            page: pagination.page,
+            total_items: users.total_items,
+            total_pages: users.total_pages,
+            page: users.page,
             route: 'app_users'
         }) }}
 

@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+   Créer une nouvelle tâche - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+    <main class="container">
+        <h1>Créer une nouvelle tâche</h1>
+
+        {{ component('task-form', {form: form}) }}
+    </main>
+{% endblock %}
