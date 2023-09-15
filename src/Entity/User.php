@@ -1,5 +1,7 @@
 <?php
 
+
+
 namespace App\Entity;
 
 use App\Repository\UserRepository;
@@ -12,6 +14,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
+
+/** @SuppressWarnings(PHPMD.ShortVariable) */
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]

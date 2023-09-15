@@ -21,9 +21,13 @@ phpunit:
 phpunit-coverage:
 	XDEBUG_MODE=coverage php vendor/bin/phpunit --coverage-html phpunit_code_coverage
 
-analyze: twig yaml composer-valid container doctrine phpstan stylelint phpunit
+analyze: twig yaml composer-valid container doctrine phpstan stylelint phpunit phpmd
 
 qa: fix analyze
+
+phpmd:
+	php phpmd.phar src text cleancode,design,naming --exclude *Fixtures.php
+.PHONY: phpmd
 
 fixtures:
 	php bin/console doctrine:fixtures:load -n
