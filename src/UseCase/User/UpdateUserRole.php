@@ -16,11 +16,10 @@ final class UpdateUserRole implements UpdateUserRoleInterface
 
     public function __invoke(User $user): void
     {
-        if (null === $user->getRole() || 'ROLE_USER' === $user->getRole()) {
-            $user->setRole('ROLE_ADMIN');
-        } else {
-            $user->setRole(null);
-        }
+        match ($user->getRole()) {
+            'ROLE_ADMIN' => $user->setRole('ROLE_USER'),
+            default => $user->setRole('ROLE_ADMIN'),
+        };
 
         $this->manager->persist($user);
         $this->manager->flush();

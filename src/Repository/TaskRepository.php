@@ -37,33 +37,63 @@ class TaskRepository extends ServiceEntityRepository
      *
      * @throws NonUniqueResultException
      */
-    public function getPaginatedTasks(User $user, int $page, bool $completed = false, bool $anon = false): array
+    public function getPaginatedTasks(User $user, int $page, bool $completed): array
     {
         $query = $this
             ->createQueryBuilder('task')
             ->orderBy('task.id', 'DESC')
             ->setFirstResult($this->tasksPerPage * ($page - 1))
-            ->setMaxResults($this->tasksPerPage);
+            ->setMaxResults($this->tasksPerPage)
+            ->where('task.completed = :completed')
+            ->setParameter('completed', $completed)
+            ->andWhere('task.owner = :user')
+            ->setParameter('user', $user->getId(), UlidType::NAME);
 
         $totalItemsQuery = $this
             ->createQueryBuilder('task')
-            ->select('COUNT(task.id)');
+            ->select('COUNT(task.id)')
+            ->where('task.completed = :completed')
+            ->setParameter('completed', $completed)
+            ->andWhere('task.owner = :user')
+            ->setParameter('user', $user->getId(), UlidType::NAME);
 
-        if ($anon) {
-            $query->where('task.owner IS NULL');
-            $totalItemsQuery->where('task.owner IS NULL');
-        } else {
-            $query
-                ->where('task.completed = :completed')
-                ->setParameter('completed', $completed)
-                ->andWhere('task.owner = :user')
-                ->setParameter('user', $user->getId(), UlidType::NAME);
-            $totalItemsQuery
-                ->where('task.completed = :completed')
-                ->setParameter('completed', $completed)
-                ->andWhere('task.owner = :user')
-                ->setParameter('user', $user->getId(), UlidType::NAME);
-        }
+        /** @var Task[] $tasks */
+        $tasks = $query->getQuery()->getResult();
+        $totalItems = (int) $totalItemsQuery->getQuery()->getSingleScalarResult();
+
+        return [
+            'total_items' => $totalItems,
+            'total_pages' => (int) ceil($totalItems / $this->tasksPerPage),
+            'items_per_page' => $this->tasksPerPage,
+            'page' => $page,
+            'embedded' => $tasks,
+        ];
+    }
+
+    /**
+     * @return array{
+     *     total_items: int,
+     *     total_pages: int,
+     *     items_per_page: int,
+     *     page: int,
+     *     embedded: Task[]
+     * }
+     *
+     * @throws NonUniqueResultException
+     */
+    public function getAnonPaginatedTasks(int $page): array
+    {
+        $query = $this
+            ->createQueryBuilder('task')
+            ->orderBy('task.id', 'DESC')
+            ->setFirstResult($this->tasksPerPage * ($page - 1))
+            ->setMaxResults($this->tasksPerPage)
+            ->where('task.owner IS NULL');
+
+        $totalItemsQuery = $this
+            ->createQueryBuilder('task')
+            ->select('COUNT(task.id)')
+            ->where('task.owner IS NULL');
 
         /** @var Task[] $tasks */
         $tasks = $query->getQuery()->getResult();

@@ -9,13 +9,13 @@ use App\Entity\User;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 
-final class TaskVoter extends Voter
+final class DeleteTaskVoter extends Voter
 {
-    public const OWNER = 'owner';
+    public const DELETE = 'delete';
 
     protected function supports(string $attribute, mixed $subject): bool
     {
-        if (self::OWNER != $attribute) {
+        if (self::DELETE != $attribute) {
             return false;
         }
 

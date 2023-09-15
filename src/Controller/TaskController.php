@@ -29,7 +29,7 @@ class TaskController extends AbstractController
         $user = $this->getUser();
 
         $listTasksDTO = new ListTasksDTO(
-            $request->query->getInt('page', 1),
+            max($request->query->getInt('page', 1), 1),
             $request->query->getBoolean('completed'),
             $request->query->getBoolean('anon')
         );
@@ -60,7 +60,7 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/app/taches/{id}/marquer', name: 'app_task_mark')]
-    #[IsGranted(attribute: 'owner', subject: 'task')]
+    #[IsGranted(attribute: 'mark', subject: 'task')]
     public function mark(Task $task, MarkTaskInterface $markTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -71,7 +71,7 @@ class TaskController extends AbstractController
     }
 
     #[Route(path: '/app/taches/{id}/supprimer', name: 'app_task_delete')]
-    #[IsGranted(attribute: 'owner', subject: 'task')]
+    #[IsGranted(attribute: 'delete', subject: 'task')]
     public function delete(Task $task, DeleteTaskInterface $deleteTask): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

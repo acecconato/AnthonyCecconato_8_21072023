@@ -203,6 +203,44 @@ class TaskControllerTest extends WebTestCase
     /**
      * @throws \Exception
      */
+    public function testMarkAnonTaskSuccess(): void
+    {
+        $this->login();
+
+        /** @var Task $task */
+        $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findOneBy(
+            ['owner' => null]
+        );
+
+        $initialState = $task->isCompleted();
+
+        $this->client->request('GET', 'app/taches/'.$task->getId().'/marquer');
+
+        $this->client->followRedirect();
+
+        self::assertResponseIsSuccessful();
+        self::assertEquals(!$initialState, $task->isCompleted());
+    }
+
+    /**
+     * @throws \Exception
+     */
+    public function testMarkAnonTaskAccessDeniedException(): void
+    {
+        /** @var Task $task */
+        $task = self::getContainer()->get('doctrine.orm.entity_manager')->getRepository(Task::class)->findOneBy(
+            ['owner' => null]
+        );
+
+        $this->client->catchExceptions(false);
+        self::expectException(AccessDeniedException::class);
+
+        $this->client->request('GET', 'app/taches/'.$task->getId().'/marquer');
+    }
+
+    /**
+     * @throws \Exception
+     */
     public function testDeleteTaskSuccess(): void
     {
         $user = $this->login();

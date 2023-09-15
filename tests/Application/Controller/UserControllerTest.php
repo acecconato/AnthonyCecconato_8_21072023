@@ -245,7 +245,6 @@ class UserControllerTest extends WebTestCase
         /** @var User $updatedUser */
         $updatedUser = $this->manager->find(User::class, $user->getId());
 
-        self::assertEquals(null, $updatedUser->getRole());
         self::assertTrue(in_array('ROLE_USER', $updatedUser->getRoles(), true));
         self::assertCount(1, $updatedUser->getRoles());
     }

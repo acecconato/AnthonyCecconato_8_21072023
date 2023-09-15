@@ -29,6 +29,6 @@ final class UpdateUserRoleTest extends TestCase
         $user->setRole('ROLE_ADMIN');
         $updateUserRole($user);
 
-        self::assertNull($user->getRole());
+        self::assertEquals('ROLE_USER', $user->getRole());
     }
 }

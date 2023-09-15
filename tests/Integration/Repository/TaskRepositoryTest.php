@@ -37,7 +37,7 @@ class TaskRepositoryTest extends KernelTestCase
         $token = new UsernamePasswordToken($user, 'main', ['ROLE_USER']);
         $tokenStorage->setToken($token);
 
-        $tasks = $this->manager->getRepository(Task::class)->getPaginatedTasks($user, 1, true);
+        $tasks = $this->manager->getRepository(Task::class)->getPaginatedTasks($user, page: 1, completed: true);
 
         self::assertEquals(10, $tasks['total_items']);
         self::assertEquals(1, $tasks['page']);
@@ -59,7 +59,7 @@ class TaskRepositoryTest extends KernelTestCase
         $token = new UsernamePasswordToken($user, 'main', ['ROLE_USER']);
         $tokenStorage->setToken($token);
 
-        $tasks = $this->manager->getRepository(Task::class)->getPaginatedTasks($user, 1, anon: true);
+        $tasks = $this->manager->getRepository(Task::class)->getAnonPaginatedTasks(page: 1);
 
         self::assertEquals(20, $tasks['total_items']);
         self::assertEquals(1, $tasks['page']);

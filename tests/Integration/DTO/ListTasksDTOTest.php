@@ -11,11 +11,7 @@ final class ListTasksDTOTest extends KernelTestCase
 {
     public function testListTasksDTOValid(): void
     {
-        $listTasksDTO = new ListTasksDTO();
-
-        $listTasksDTO->setAnon(true);
-        $listTasksDTO->setCompleted(true);
-        $listTasksDTO->setPage(1);
+        $listTasksDTO = new ListTasksDTO(1, true, true);
 
         self::assertTrue($listTasksDTO->isAnon());
         self::assertTrue($listTasksDTO->isCompleted());

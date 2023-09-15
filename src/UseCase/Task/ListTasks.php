@@ -9,7 +9,7 @@ use App\Entity\User;
 use App\Repository\TaskRepository;
 use Doctrine\ORM\NonUniqueResultException;
 
-class ListTasks implements ListTasksInterface
+final class ListTasks implements ListTasksInterface
 {
     public function __construct(
         private readonly TaskRepository $repository
@@ -25,6 +25,9 @@ class ListTasks implements ListTasksInterface
         $completed = $listTasksDTO->isCompleted();
         $anon = $listTasksDTO->isAnon();
 
-        return $this->repository->getPaginatedTasks($user, $page, $completed, $anon);
+        return match ($anon) {
+            true => $this->repository->getAnonPaginatedTasks($page),
+            false => $this->repository->getPaginatedTasks($user, $page, $completed),
+        };
     }
 }
