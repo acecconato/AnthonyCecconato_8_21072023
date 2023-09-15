@@ -2,7 +2,7 @@
 
 Améliorez une application existante de ToDo & Co - Openclassrooms projet 8
 
-[!Workflow status Badge](https://github.com/acecconato/AnthonyCecconato_8_21072023/actions/workflows/continuous_integration.yml/badge.svg)
+![Workflow status Badge](https://github.com/acecconato/AnthonyCecconato_8_21072023/actions/workflows/continuous_integration.yml/badge.svg)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/bf6901d6bba1451195c22c5935e45356)](https://app.codacy.com/gh/acecconato/AnthonyCecconato_8_21072023/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 ![Phpstan badge](https://img.shields.io/badge/PHPStan-level%209-brightgreen.svg?style=flat)
 
