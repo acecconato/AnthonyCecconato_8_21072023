@@ -37,10 +37,16 @@ final class TaskVoter extends Voter
         /** @var Task $task */
         $task = $subject;
 
-        if (null === $task->getOwner()) {
-            return true;
-        }
+        return $this->isTaskOwner($task, $user) || $this->canRemoveAnonTask($task, $user);
+    }
 
+    private function isTaskOwner(Task $task, User $user): bool
+    {
         return $task->getOwner() === $user;
+    }
+
+    private function canRemoveAnonTask(Task $task, User $user): bool
+    {
+        return null === $task->getOwner() && 'ROLE_ADMIN' === $user->getRole();
     }
 }

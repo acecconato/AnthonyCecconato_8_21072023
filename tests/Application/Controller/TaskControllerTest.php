@@ -236,6 +236,19 @@ class TaskControllerTest extends WebTestCase
         self::assertNull($task->getId());
     }
 
+    public function testDeleteAnonTaskAsUserAccessDeniedException(): void
+    {
+        $this->login();
+
+        /** @var Task $task */
+        $task = $this->manager->getRepository(Task::class)->findOneBy(['owner' => null]);
+
+        $this->client->catchExceptions(false);
+        self::expectException(AccessDeniedException::class);
+
+        $this->client->request('GET', 'app/taches/'.$task->getId().'/supprimer');
+    }
+
     /**
      * @throws \Exception
      */

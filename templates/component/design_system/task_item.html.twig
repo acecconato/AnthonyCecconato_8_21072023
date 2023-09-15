@@ -13,7 +13,9 @@
             <p class="card-text">{{ task.content }}</p>
             <hr class="w-25">
             <div class="d-flex flex-nowrap align-items-center justify-content-end gap-1 mb-0">
-                <a href="{{ path('app_task_delete', {id: task.id}) }}" class="btn btn-sm btn-danger col-4">Supprimer</a>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_task_delete', {id: task.id}) }}" class="btn btn-sm btn-danger col-4">Supprimer</a>
+                {% endif %}
                 {% if task.completed == false %}
                     <a href="{{ path('app_task_mark', {id: task.id}) }}" class="btn btn-sm btn-success col-8">Marquer comme faite</a>
                 {% else %}
