@@ -10,7 +10,6 @@ use Symfony\Component\Uid\Ulid;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /** @SuppressWarnings(PHPMD.ShortVariable) */
-
 #[ORM\Entity(repositoryClass: TaskRepository::class)]
 class Task
 {
